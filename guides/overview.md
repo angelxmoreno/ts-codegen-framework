@@ -66,7 +66,8 @@ This project is a GitHub-hosted framework for building CLI tools that generate c
 #### `src/template-loader/`
 
 * **`TemplateLoader.ts`** – Utility to render Eta templates
-* **`helpers.ts`** – Template helper functions (e.g., case conversion)
+* **`templateContext.ts`** – TemplateContext generation for queue/job processing
+* **`types.ts`** – Template-related type definitions and exports
 
 #### `src/templates/`
 
@@ -109,7 +110,7 @@ chmod +x bin/codegen
 * [ ] GitHub Actions: `lint.yml`, `test.yml`
 * [ ] README badges
 * [ ] `codegen init` command to scaffold user config/templates
-* [ ] `codegen doctor` to validate template paths, helpers
+* [ ] `codegen doctor` to validate template paths, TemplateContext generation
 * [ ] Add plugin loader support
 * [ ] Publish as a GitHub template repo
 

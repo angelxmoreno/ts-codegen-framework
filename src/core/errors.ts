@@ -90,6 +90,17 @@ export class TemplateLoadError extends CodegenError {
 }
 
 /**
+ * Error thrown when template cannot be found
+ */
+export class TemplateNotFoundError extends CodegenError {
+    readonly code = 'TEMPLATE_NOT_FOUND_ERROR';
+
+    constructor(templateName: string, searchedDirs: string[]) {
+        super(`Template '${templateName}' not found in directories: ${searchedDirs.join(', ')}`);
+    }
+}
+
+/**
  * Error thrown when template rendering fails
  */
 export class TemplateRenderError extends CodegenError {
@@ -97,6 +108,17 @@ export class TemplateRenderError extends CodegenError {
 
     constructor(templatePath: string, cause?: Error) {
         super(`Failed to render template ${templatePath}`, cause);
+    }
+}
+
+/**
+ * Error thrown when writing rendered output fails
+ */
+export class TemplateWriteError extends CodegenError {
+    readonly code = 'TEMPLATE_WRITE_ERROR';
+
+    constructor(outputPath: string, cause?: Error) {
+        super(`Failed to write template output to ${outputPath}`, cause);
     }
 }
 

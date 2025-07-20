@@ -20,21 +20,22 @@
 ## 🧱 Core Implementation
 
 ### Phase 3: Template System
-- [ ] Implement `src/template-loader/TemplateLoader.ts` class
-    - [ ] Initialize Eta engine with custom configuration
-    - [ ] Load templates from file system or user-defined paths
-    - [ ] Handle template caching and error handling
-- [ ] Create `src/template-loader/helpers.ts` with utility functions
-    - [ ] Case conversion helpers (camelCase, PascalCase, snake_case, kebab-case)
-    - [ ] String manipulation utilities
-    - [ ] Common template helper functions
+- [X] Implement `src/template-loader/TemplateLoader.ts` class
+    - [X] Initialize Eta engine with custom configuration
+    - [X] Load templates from file system or user-defined paths
+    - [ ] Handle template caching
+    - [X] Handle template error handling
+- [X] Create `src/template-loader/templateContext.ts` with TemplateContext generation
+    - [X] TemplateContext interface for queue/job processing
+    - [X] Pre-computed naming functions (producer, processor, worker)
+    - [X] createTemplateContextFromConfig function
 - [ ] Add sample template `src/templates/default/model.eta`
 
 ### Phase 4: Generation Pipeline
 - [ ] Build `src/core/generator.ts` main generation engine
     - [ ] Integrate TemplateLoader for rendering
     - [ ] File system operations (read/write/create directories)
-    - [ ] Template context preparation and injection
+    - [X] Template context preparation using createTemplateContextFromConfig
     - [ ] Error handling and validation
 - [ ] Implement `src/core/parser.ts` (optional but recommended)
     - [ ] JSON input parsing
@@ -66,7 +67,7 @@
     - [ ] Test parser and transformer (if implemented)
 - [ ] Write unit tests for `tests/template-loader/`
     - [ ] Test template loading and rendering
-    - [ ] Test helper functions
+    - [ ] Test TemplateContext generation and naming functions
     - [ ] Test error scenarios
 - [ ] Create integration tests
     - [ ] End-to-end CLI testing
@@ -113,7 +114,7 @@
 - [ ] Add `codegen doctor` diagnostic command
     - [ ] Validate config file syntax
     - [ ] Check template file existence
-    - [ ] Verify helper function availability
+    - [ ] Verify TemplateContext generation works correctly
     - [ ] Test template compilation
 - [ ] Create `codegen list` command to show available templates
 
