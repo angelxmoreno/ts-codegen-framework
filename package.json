@@ -1,0 +1,17 @@
+{
+  "name": "ts-codegen-framework",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
