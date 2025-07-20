@@ -29,98 +29,53 @@ This project is a GitHub-hosted framework for building CLI tools that generate c
 | Package manager      | Bun or pnpm                |
 | Lint/format/test     | Biome + Vitest or Bun test |
 | Optional init script | Shell (`init.sh`)          |
+| Path aliases         | TypeScript `paths` config  |
 
 ---
 
-## 📁 Directory Structure
+## 📁 Files & Purpose
 
-```
-ts-codegen-framework/
-├── bin/
-│   └── codegen                  # CLI entry (#!/usr/bin/env tsx or bun)
-├── src/
-│   ├── cli/                    # Commander CLI logic
-│   │   └── index.ts
-│   ├── config/                 # Zod config schema + loader
-│   │   ├── config.schema.ts
-│   │   └── loadConfig.ts
-│   ├── core/                   # Codegen pipeline (parse → transform → generate)
-│   │   ├── parser.ts
-│   │   ├── transformer.ts
-│   │   ├── generator.ts
-│   │   └── types.ts
-│   ├── template-loader/        # Eta template rendering & helpers
-│   │   ├── TemplateLoader.ts
-│   │   └── helpers.ts
-│   ├── templates/              # Built-in default templates
-│   │   └── default/
-│   │       └── model.eta
-│   └── index.ts                # Optional API entry
-├── tests/
-│   ├── core/
-│   └── template-loader/
-├── codegen.config.ts           # Sample user config file
-├── init.sh                     # Bootstrapper script
-├── .gitignore
-├── .biome.json
-├── tsconfig.json
-├── package.json
-├── README.md
-```
+### Top-level
 
----
+* **`bin/codegen`** – CLI entry point; uses `tsx` to execute the CLI source
+* **`codegen.config.ts`** – Example config file for a codegen project
+* **`init.sh`** – Shell script to rename & bootstrap this template into a new CLI repo
+* **`.biome.json`** – Biome configuration (linting/formatting)
+* **`.gitignore`**, `README.md`, `package.json`, `tsconfig.json` – Project metadata and tooling config
 
-## 🔧 Required Files to Implement
+### `src/`
 
-### 1. `bin/codegen`
+* **`src/index.ts`** – Optional library entry point if exposing an API
 
-```ts
-#!/usr/bin/env bun
-// Or use tsx: #!/usr/bin/env tsx
-import '../src/cli/index.ts';
-```
+#### `src/cli/`
 
-### 2. `src/cli/index.ts`
+* **`index.ts`** – Defines CLI structure using Commander
 
-```ts
-import { Command } from 'commander';
-import { loadConfig } from '../config/loadConfig';
-import { generate } from '../core/generator';
+#### `src/config/`
 
-const program = new Command();
-program
-  .name('codegen')
-  .description('Generate files from templates')
-  .action(async () => {
-    const config = await loadConfig();
-    await generate(config);
-  });
+* **`config.schema.ts`** – Zod schema to validate the config
+* **`loadConfig.ts`** – Dynamically loads and validates the config file
 
-program.parse();
-```
+#### `src/core/`
 
-### 3. `src/config/loadConfig.ts`
+* **`parser.ts`** – Optional input parser for JSON, TypeScript, or other sources
+* **`transformer.ts`** – Optional transformation of parsed input to template context
+* **`generator.ts`** – Renders templates and writes output files
+* **`types.ts`** – Shared types for config, context, generation, etc.
 
-```ts
-import { z } from 'zod';
-import { configSchema } from './config.schema';
+#### `src/template-loader/`
 
-export async function loadConfig() {
-  const userConfig = await import(process.cwd() + '/codegen.config.ts');
-  return configSchema.parse(userConfig.default || userConfig);
-}
-```
+* **`TemplateLoader.ts`** – Utility to render Eta templates
+* **`helpers.ts`** – Template helper functions (e.g., case conversion)
 
-### 4. `src/template-loader/TemplateLoader.ts`
+#### `src/templates/`
 
-```ts
-import { renderFile } from 'eta';
-import { join } from 'path';
+* **`default/model.eta`** – Sample default Eta template to demonstrate usage
 
-export async function renderTemplate(templatePath: string, data: any): Promise<string> {
-  return renderFile(templatePath, data, { views: [process.cwd()] }) as Promise<string>;
-}
-```
+### `tests/`
+
+* **`core/`** – Unit tests for codegen pipeline
+* **`template-loader/`** – Unit tests for template loading and rendering
 
 ---
 
@@ -136,17 +91,15 @@ chmod +x init.sh
 ./init.sh my-cli
 ```
 
-### Run (Bun)
+### Run
 
 ```bash
 bun run bin/codegen
-```
-
-### Or Run with pnpm/tsx
-
-```bash
-pnpm install
-pnpm exec tsx bin/codegen
+# or
+pnpm run bin/codegen
+# or
+chmod +x bin/codegen
+./bin/codegen
 ```
 
 ---
