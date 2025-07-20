@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+require('tsx').default('./src/index.ts');

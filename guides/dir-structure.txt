@@ -1,0 +1,31 @@
+ts-codegen-framework/
+├── bin/
+│   └── codegen                  # CLI entry (#!/usr/bin/env tsx or bun)
+├── src/
+│   ├── cli/                    # Commander CLI logic
+│   │   └── index.ts
+│   ├── config/                 # Zod config schema + loader
+│   │   ├── config.schema.ts
+│   │   └── loadConfig.ts
+│   ├── core/                   # Codegen pipeline (parse → transform → generate)
+│   │   ├── parser.ts
+│   │   ├── transformer.ts
+│   │   ├── generator.ts
+│   │   └── types.ts
+│   ├── template-loader/        # Eta template rendering & helpers
+│   │   ├── TemplateLoader.ts
+│   │   └── helpers.ts
+│   ├── templates/              # Built-in default templates
+│   │   └── default/
+│   │       └── model.eta
+│   └── index.ts                # Optional API entry
+├── tests/
+│   ├── core/
+│   └── template-loader/
+├── codegen.config.ts           # Sample user config file
+├── init.sh                     # Bootstrapper script
+├── .gitignore
+├── .biome.json
+├── tsconfig.json
+├── package.json
+├── README.md
