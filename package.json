@@ -1,17 +1,30 @@
 {
-  "name": "ts-codegen-framework",
-  "module": "src/index.ts",
-  "type": "module",
-  "scripts": {
-
-  },
-  "dependencies": {
-
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+    "name": "ts-codegen-framework",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "clean": "rm -rf node_modules bun.lock && bun install",
+        "lint": "biome check .",
+        "lint:fix": "biome check --write",
+        "check-types": "tsc --noEmit"
+    },
+    "dependencies": {
+        "eta": "^3.5.0",
+        "zod": "^4.0.5"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.1.2",
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@types/bun": "latest",
+        "lefthook": "^1.12.2"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    }
 }
