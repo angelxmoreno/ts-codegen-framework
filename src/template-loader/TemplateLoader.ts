@@ -15,6 +15,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 export class TemplateLoader {
     protected eta: Eta;
     protected config: TemplateLoaderConfig;
+    protected templateCache: TemplateInfo[] | null = null;
 
     constructor(config: TemplateLoaderConfig) {
         this.config = config;
@@ -34,11 +35,15 @@ export class TemplateLoader {
      * Discover all available templates in configured directories (non-recursive)
      */
     async discoverTemplates(): Promise<TemplateInfo[]> {
+        if (this.templateCache) {
+            return this.templateCache;
+        }
+
         const templates: TemplateInfo[] = [];
 
         for (const templateDir of this.config.templateDirs) {
             if (!existsSync(templateDir)) {
-                logger.warn({ templateDir }, 'Template directory does not exist');
+                logger.debug({ templateDir }, 'Template directory does not exist, skipping');
                 continue;
             }
 
@@ -50,7 +55,8 @@ export class TemplateLoader {
             }
         }
 
-        logger.info({ count: templates.length }, 'Discovered templates');
+        logger.debug({ count: templates.length }, 'Templates discovered');
+        this.templateCache = templates;
         return templates;
     }
 
@@ -91,7 +97,7 @@ export class TemplateLoader {
             const resolvedPath = resolve(templatePath);
             const content = await readFile(resolvedPath, 'utf-8');
 
-            logger.debug({ templatePath: resolvedPath }, 'Template loaded successfully');
+            // Template loaded successfully (reduced logging)
             return content;
         } catch (error) {
             logger.error({ templatePath, error }, 'Failed to load template');
@@ -112,14 +118,7 @@ export class TemplateLoader {
             // Render template with context
             const renderedContent = await this.eta.renderStringAsync(templateContent, context);
 
-            logger.debug(
-                {
-                    templatePath,
-                    outputPath,
-                    contentLength: renderedContent.length,
-                },
-                'Template rendered successfully'
-            );
+            // Template rendered successfully (reduced logging)
 
             // Write to file if output path is specified
             let written = false;

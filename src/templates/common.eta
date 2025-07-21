@@ -3,7 +3,7 @@ import type { z } from 'zod';
 <% const uniqueSchemas = [...new Set(it.queues.flatMap(queue => queue.jobs.map(job => job.payload.name)))]; %>
 import type { <%= uniqueSchemas.join(', ') %> } from '../schemas.ts';
 
-export type QueueName = <% it.queues.map(queue => `'${queue.name}'`).join(' | ') %>;
+export type QueueName = <%= it.queues.map(queue => `'${queue.name}'`).join(' | ') %>;
 export type ProducerFunc<T> = (payload: T) => Promise<void>;
 export type QueueMap = Record<QueueName, Queue>;
 export type WorkerMap = {

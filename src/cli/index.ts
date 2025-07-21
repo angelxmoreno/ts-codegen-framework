@@ -40,7 +40,16 @@ program
 
             logger.info('Code generation completed successfully!');
         } catch (error) {
-            logger.error('Code generation failed:', error);
+            logger.error(
+                'Code generation failed:',
+                error instanceof Error
+                    ? {
+                          message: error.message,
+                          stack: error.stack,
+                          name: error.name,
+                      }
+                    : error
+            );
             process.exit(1);
         }
     });

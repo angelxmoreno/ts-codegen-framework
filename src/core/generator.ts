@@ -1,10 +1,13 @@
 import { mkdir } from 'node:fs/promises';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { type ConfigWithPath, loadConfig } from '@config/loadConfig';
 import { createTemplateLoader } from '../template-loader/TemplateLoader';
 import { createTemplateContextFromConfig, type TemplateContext } from '../template-loader/templateContext';
 import logger from '../utils/createLogger';
 import { TemplateRenderError, TemplateWriteError } from './errors';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface GenerateOptions {
     configPath?: string;
@@ -53,7 +56,19 @@ export class CodeGenerator {
 
             logger.info({ outputDir }, 'Code generation completed successfully');
         } catch (error) {
-            logger.error({ error }, 'Code generation failed');
+            logger.error(
+                {
+                    error:
+                        error instanceof Error
+                            ? {
+                                  message: error.message,
+                                  stack: error.stack,
+                                  name: error.name,
+                              }
+                            : error,
+                },
+                'Code generation failed'
+            );
             throw error;
         }
     }
@@ -87,8 +102,6 @@ export class CodeGenerator {
             extensions: ['.eta'],
             includeBuiltins: true,
         });
-
-        logger.debug({ templateDirs }, 'Template loader initialized');
     }
 
     /**
