@@ -32,11 +32,11 @@
 - [ ] Add sample template `src/templates/default/model.eta`
 
 ### Phase 4: Generation Pipeline
-- [ ] Build `src/core/generator.ts` main generation engine
-    - [ ] Integrate TemplateLoader for rendering
-    - [ ] File system operations (read/write/create directories)
+- [X] Build `src/core/generator.ts` main generation engine
+    - [X] Integrate TemplateLoader for rendering
+    - [X] File system operations (read/write/create directories)
     - [X] Template context preparation using createTemplateContextFromConfig
-    - [ ] Error handling and validation
+    - [X] Error handling and validation
 - [ ] Implement `src/core/parser.ts` (optional but recommended)
     - [ ] JSON input parsing
     - [ ] TypeScript AST parsing (if needed)
@@ -46,13 +46,13 @@
     - [ ] Data normalization and enrichment
 
 ### Phase 5: CLI Interface
-- [ ] Implement `src/cli/index.ts` with Commander.js
-    - [ ] Define main command structure
-    - [ ] Add `generate` command with options
-    - [ ] Implement config file path option (`-c, --config`)
-    - [ ] Add template path option (`-t, --templates`)
-    - [ ] Include output directory option (`-o, --output`)
-    - [ ] Add verbose/debug flags
+- [X] Implement `src/cli/index.ts` with Commander.js
+    - [X] Define main command structure
+    - [X] Add `generate` command with options
+    - [X] Implement config file path option (`-c, --config`)
+    - [X] Add template path option (`-t, --templates`)
+    - [X] Include output directory option (`-o, --output`)
+    - [X] Add verbose/debug flags
 - [ ] Create `src/index.ts` as library entry point (optional API export)
 
 ---

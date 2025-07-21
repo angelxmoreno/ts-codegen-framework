@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require('tsx').default('./src/index.ts');
+require('tsx/cjs').register();
+require('./src/cli/index.ts');
