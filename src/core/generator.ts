@@ -48,11 +48,8 @@ export class CodeGenerator {
             const outputDir = this.config.outputPath || process.cwd();
             await mkdir(outputDir, { recursive: true });
 
-            // Generate all files
-            await this.generateFile('common.eta', 'common.ts', context, outputDir);
-            await this.generateFile('queues.eta', 'queues.ts', context, outputDir);
-            await this.generateFile('workers.eta', 'workers.ts', context, outputDir);
-            await this.generateFile('producers.eta', 'producers.ts', context, outputDir);
+            // Discover and generate all templates
+            await this.generateAllTemplates(context, outputDir);
 
             logger.info({ outputDir }, 'Code generation completed successfully');
         } catch (error) {
@@ -102,6 +99,35 @@ export class CodeGenerator {
             extensions: ['.eta'],
             includeBuiltins: true,
         });
+    }
+
+    /**
+     * Generate files for all discovered templates
+     */
+    protected async generateAllTemplates(context: TemplateContext, outputDir: string): Promise<void> {
+        if (!this.templateLoader) throw new Error('Template loader not initialized');
+
+        const templates = await this.templateLoader.discoverTemplates();
+
+        for (const template of templates) {
+            const outputFileName = this.getOutputFileName(template.name, template.extension);
+            await this.generateFile(template.name, outputFileName, context, outputDir);
+        }
+    }
+
+    /**
+     * Convert template name to output file name
+     *
+     * The TemplateLoader already strips the template extension (.eta) from the name,
+     * so templateName already contains the desired output filename.
+     *
+     * Examples:
+     * - File: "common.ts.eta" -> templateName: "common.ts" -> output: "common.ts"
+     * - File: "extra.json.eta" -> templateName: "extra.json" -> output: "extra.json"
+     * - File: "config.yml.eta" -> templateName: "config.yml" -> output: "config.yml"
+     */
+    protected getOutputFileName(templateName: string, _templateExtension: string): string {
+        return templateName;
     }
 
     /**
