@@ -6,6 +6,10 @@ import { ConfigLoadError, ConfigValidationError } from '@core/errors';
 import { z } from 'zod';
 import logger from '../utils/createLogger';
 
+export interface ConfigWithPath extends Config {
+    configPath: string;
+}
+
 /**
  * Validates a config object against the schema
  */
@@ -25,11 +29,11 @@ export const validateConfig = (maybeConfig: unknown, configPath?: string): Confi
  * @param configPath - Path to the config file (defaults to './codegen.config.ts')
  * @returns Promise resolving to validated config
  */
-export const loadConfig = async (configPath = './codegen.config.ts'): Promise<Config> => {
-    try {
-        // Resolve the absolute path
-        const absolutePath = resolve(configPath);
+export const loadConfig = async (configPath = './codegen.config.ts'): Promise<ConfigWithPath> => {
+    // Resolve the absolute path
+    const absolutePath = resolve(configPath);
 
+    try {
         // Convert to file URL for dynamic import
         const fileUrl = pathToFileURL(absolutePath).href;
 
@@ -43,14 +47,14 @@ export const loadConfig = async (configPath = './codegen.config.ts'): Promise<Co
 
         if (!config) {
             logger.warn({ configPath }, 'No config found in file, using defaults');
-            return defaultConfig;
+            return { ...defaultConfig, configPath: absolutePath };
         }
 
         // Validate and return the config
         const validatedConfig = validateConfig(config, configPath);
         logger.info({ configPath }, 'Configuration loaded successfully');
 
-        return validatedConfig;
+        return { ...validatedConfig, configPath: absolutePath };
     } catch (error: unknown) {
         // Handle validation errors
         if (error instanceof ConfigValidationError) {
@@ -72,7 +76,7 @@ export const loadConfig = async (configPath = './codegen.config.ts'): Promise<Co
                 (error as unknown as { code?: string }).code === 'ERR_MODULE_NOT_FOUND'
             ) {
                 logger.warn({ configPath }, 'Config file not found, using defaults');
-                return defaultConfig;
+                return { ...defaultConfig, configPath: absolutePath };
             }
 
             // Wrap other errors in ConfigLoadError

@@ -24,7 +24,7 @@
         // Some stricter flags
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noPropertyAccessFromIndexSignature": true,
+        "noPropertyAccessFromIndexSignature": false,
         "baseUrl": "./src",
         "paths": {
             "@cli/*": ["cli/*"],

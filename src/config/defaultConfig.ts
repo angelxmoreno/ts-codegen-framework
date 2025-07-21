@@ -5,4 +5,5 @@ export const defaultConfig: Config = {
     queues: [],
     templatePath: path.resolve('./templates/default'),
     outputPath: path.resolve('./output'),
+    connectionFactory: () => ({}),
 };
