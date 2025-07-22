@@ -29,98 +29,58 @@ This project is a GitHub-hosted framework for building CLI tools that generate c
 | Package manager      | Bun or pnpm                |
 | Lint/format/test     | Biome + Vitest or Bun test |
 | Optional init script | Shell (`init.sh`)          |
+| Path aliases         | TypeScript `paths` config  |
 
 ---
 
-## 📁 Directory Structure
+## 📁 Files & Purpose
 
-```
-ts-codegen-framework/
-├── bin/
-│   └── codegen                  # CLI entry (#!/usr/bin/env tsx or bun)
-├── src/
-│   ├── cli/                    # Commander CLI logic
-│   │   └── index.ts
-│   ├── config/                 # Zod config schema + loader
-│   │   ├── config.schema.ts
-│   │   └── loadConfig.ts
-│   ├── core/                   # Codegen pipeline (parse → transform → generate)
-│   │   ├── parser.ts
-│   │   ├── transformer.ts
-│   │   ├── generator.ts
-│   │   └── types.ts
-│   ├── template-loader/        # Eta template rendering & helpers
-│   │   ├── TemplateLoader.ts
-│   │   └── helpers.ts
-│   ├── templates/              # Built-in default templates
-│   │   └── default/
-│   │       └── model.eta
-│   └── index.ts                # Optional API entry
-├── tests/
-│   ├── core/
-│   └── template-loader/
-├── codegen.config.ts           # Sample user config file
-├── init.sh                     # Bootstrapper script
-├── .gitignore
-├── .biome.json
-├── tsconfig.json
-├── package.json
-├── README.md
-```
+### Top-level
 
----
+* **`bin/codegen`** – CLI entry point; uses `tsx` to execute the CLI source
+* **`codegen.config.ts`** – Example config file for a codegen project
+* **`init.sh`** – Shell script to rename & bootstrap this template into a new CLI repo
+* **`.biome.json`** – Biome configuration (linting/formatting)
+* **`.gitignore`**, `README.md`, `package.json`, `tsconfig.json` – Project metadata and tooling config
 
-## 🔧 Required Files to Implement
+### `src/`
 
-### 1. `bin/codegen`
+* **`src/index.ts`** – *(Removed)* Library entry not needed for CLI-focused tool
 
-```ts
-#!/usr/bin/env bun
-// Or use tsx: #!/usr/bin/env tsx
-import '../src/cli/index.ts';
-```
+#### `src/cli/`
 
-### 2. `src/cli/index.ts`
+* **`index.ts`** – Defines CLI structure using Commander
 
-```ts
-import { Command } from 'commander';
-import { loadConfig } from '../config/loadConfig';
-import { generate } from '../core/generator';
+#### `src/config/`
 
-const program = new Command();
-program
-  .name('codegen')
-  .description('Generate files from templates')
-  .action(async () => {
-    const config = await loadConfig();
-    await generate(config);
-  });
+* **`config.schema.ts`** – Zod schema to validate the config
+* **`defaultConfig.ts`** – Default configuration values
+* **`templateContext.ts`** – TemplateContext generation for queue/job processing
+* **`templates/`** – Built-in template files
+  * **`common.ts.eta`** – Common types and utilities
+  * **`producers.ts.eta`** – Job producer functions  
+  * **`queues.ts.eta`** – Queue definitions
+  * **`workers.ts.eta`** – Worker implementations
 
-program.parse();
-```
+#### `src/core/`
 
-### 3. `src/config/loadConfig.ts`
+* **`loadConfig.ts`** – Dynamically loads and validates config files
+* **`generator.ts`** – Main generation engine that renders templates and writes output files
+* **`errors.ts`** – Custom error classes for better error handling
 
-```ts
-import { z } from 'zod';
-import { configSchema } from './config.schema';
+#### `src/template-loader/`
 
-export async function loadConfig() {
-  const userConfig = await import(process.cwd() + '/codegen.config.ts');
-  return configSchema.parse(userConfig.default || userConfig);
-}
-```
+* **`TemplateLoader.ts`** – Eta template rendering utility with discovery and caching
+* **`types.ts`** – Template-related type definitions and exports
 
-### 4. `src/template-loader/TemplateLoader.ts`
+#### `src/utils/`
 
-```ts
-import { renderFile } from 'eta';
-import { join } from 'path';
+* **`createLogger.ts`** – Logging utility for consistent output across the framework
 
-export async function renderTemplate(templatePath: string, data: any): Promise<string> {
-  return renderFile(templatePath, data, { views: [process.cwd()] }) as Promise<string>;
-}
-```
+### `tests/`
+
+* **`core/`** – Unit tests for codegen pipeline
+* **`template-loader/`** – Unit tests for template loading and rendering
 
 ---
 
@@ -136,18 +96,35 @@ chmod +x init.sh
 ./init.sh my-cli
 ```
 
-### Run (Bun)
+### Run
 
 ```bash
 bun run bin/codegen
+# or
+pnpm run bin/codegen
+# or
+chmod +x bin/codegen
+./bin/codegen
 ```
 
-### Or Run with pnpm/tsx
+---
 
-```bash
-pnpm install
-pnpm exec tsx bin/codegen
-```
+## 🏗️ Architecture Decisions
+
+### Template Path Management
+- **Single Source of Truth**: Template paths defined only in `TemplateLoader.createTemplateLoader()`
+- **No Duplication**: Generator delegates template discovery to TemplateLoader
+- **User Override Support**: CLI can override template directories via `-t` flag
+
+### Simplified Generation Pipeline
+- **Direct Flow**: Config → Template Context → Template Rendering
+- **No Parser/Transformer**: Skipped complex abstraction layers for simplicity
+- **Eta Templates**: Lightweight template engine with minimal overhead
+
+### File Organization
+- **Built-in Templates**: Moved to `src/config/templates/` for logical grouping
+- **Configuration Co-location**: Config schema, defaults, and context creation in `src/config/`
+- **Modular Structure**: Clear separation between CLI, core logic, and template handling
 
 ---
 
@@ -156,7 +133,7 @@ pnpm exec tsx bin/codegen
 * [ ] GitHub Actions: `lint.yml`, `test.yml`
 * [ ] README badges
 * [ ] `codegen init` command to scaffold user config/templates
-* [ ] `codegen doctor` to validate template paths, helpers
+* [ ] `codegen doctor` to validate template paths, TemplateContext generation
 * [ ] Add plugin loader support
 * [ ] Publish as a GitHub template repo
 

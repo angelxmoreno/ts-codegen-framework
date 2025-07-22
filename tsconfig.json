@@ -21,9 +21,17 @@
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
 
-        // Some stricter flags (disabled by default)
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noPropertyAccessFromIndexSignature": false
+        // Some stricter flags
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "baseUrl": "./src",
+        "paths": {
+            "@cli/*": ["cli/*"],
+            "@core/*": ["core/*"],
+            "@config/*": ["config/*"],
+            "@utils/*": ["utils/*"],
+            "@template-loader/*": ["template-loader/*"]
+        }
     }
 }

@@ -1,0 +1,24 @@
+import type { Queue, Worker } from 'bullmq';
+import type { z } from 'zod';
+<% const uniqueSchemas = [...new Set(it.queues.flatMap(queue => queue.jobs.map(job => job.payload.name)))]; %>
+import type { <%= uniqueSchemas.join(', ') %> } from '../schemas.ts';
+
+export type QueueName = <%= it.queues.map(queue => `'${queue.name}'`).join(' | ') %>;
+export type ProducerFunc<T> = (payload: T) => Promise<void>;
+export type QueueMap = Record<QueueName, Queue>;
+export type WorkerMap = {
+<% it.queues.forEach(queue => { %>
+  <% queue.jobs.forEach(job => { %>
+    <%= job.name %>Worker: Worker;
+  <% }); %>
+<% }); %>
+};
+export type ProducerMap = {
+<% it.queues.forEach(queue => { %>
+  <% queue.jobs.forEach(job => { %>
+    <%= job.name %>: ProducerFunc<z.infer<typeof <%= job.payload.name %>>>;
+  <% }); %>
+<% }); %>
+};
+
+export const connectionFactory = <%= it.connectionFactory.toString() %>;

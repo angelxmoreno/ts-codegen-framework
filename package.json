@@ -2,6 +2,7 @@
     "name": "ts-codegen-framework",
     "module": "src/index.ts",
     "type": "module",
+    "version": "0.0.0",
     "scripts": {
         "clean": "rm -rf node_modules bun.lock && bun install",
         "lint": "biome check .",
@@ -9,7 +10,13 @@
         "check-types": "tsc --noEmit"
     },
     "dependencies": {
+        "@types/inflection": "^2.0.0",
+        "commander": "^14.0.0",
         "eta": "^3.5.0",
+        "inflection": "^3.0.2",
+        "pino": "^9.7.0",
+        "pino-pretty": "^13.0.0",
+        "tsx": "^4.20.3",
         "zod": "^4.0.5"
     },
     "devDependencies": {
@@ -20,6 +27,7 @@
         "lefthook": "^1.12.2"
     },
     "peerDependencies": {
+        "bullmq": "^5.56.5",
         "typescript": "^5"
     },
     "commitlint": {

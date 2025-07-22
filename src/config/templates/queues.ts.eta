@@ -1,0 +1,18 @@
+import { Queue } from 'bullmq';
+import { connectionFactory, type QueueMap, type QueueName } from './common.ts';
+
+const records: Partial<QueueMap> = {};
+
+<% it.queues.forEach(queue => { %>
+records.<%= queue.name %> = new Queue('<%= queue.name %>', {
+    connection: connectionFactory(),<% if (queue.queueOptions?.defaultJobOptions) { %>
+    defaultJobOptions: {<% if (queue.queueOptions.defaultJobOptions.removeOnComplete !== undefined) { %>
+        removeOnComplete: <%= queue.queueOptions.defaultJobOptions.removeOnComplete %>,<% } %><% if (queue.queueOptions.defaultJobOptions.removeOnFail !== undefined) { %>
+        removeOnFail: <%= queue.queueOptions.defaultJobOptions.removeOnFail %>,<% } %><% if (queue.queueOptions.defaultJobOptions.attempts !== undefined) { %>
+        attempts: <%= queue.queueOptions.defaultJobOptions.attempts %>,<% } %><% if (queue.queueOptions.defaultJobOptions.delay !== undefined) { %>
+        delay: <%= queue.queueOptions.defaultJobOptions.delay %>,<% } %>
+    },<% } %>
+});
+
+<% }); %>
+export const queueMap = records as Record<QueueName, Queue>;

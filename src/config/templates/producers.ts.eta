@@ -1,0 +1,17 @@
+import type { z } from 'zod';
+<% const uniqueSchemas = [...new Set(it.queues.flatMap(queue => queue.jobs.map(job => job.payload.name)))]; %>
+import type { <%= uniqueSchemas.join(', ') %> } from '../schemas.ts';
+import type { ProducerMap } from './common.ts';
+import { queueMap } from './queues.ts';
+
+const records: Partial<ProducerMap> = {};
+
+<% it.queues.forEach(queue => { %>
+  <% queue.jobs.forEach(job => { %>
+records.<%= job.name %> = async (payload: z.infer<typeof <%= job.payload.name %>>) => {
+    await queueMap.<%= queue.name %>.add('<%= job.name %>', payload);
+};
+
+  <% }); %>
+<% }); %>
+export const producerMap = records as ProducerMap;
