@@ -32,11 +32,15 @@ bun run src/cli/index.ts generate -c codegen.config.ts -v
 
 ## Getting Started
 
-1. Use degist and run init
-2. Modify `src/config/config.schema.ts` and define your config
-3. Update the default config `src/config/defaultConfig.ts`
-4. Create your templates in `src/config/templates/` or user `templates/` directory
-5. Run `./bin/codegen generate` to generate your code
+1. Clone or fork this repository
+2. Install dependencies: `bun install`
+3. Modify `src/config/config.schema.ts` and define your config
+4. Update the default config `src/config/defaultConfig.ts`
+5. Create your templates in `src/config/templates/` or user `templates/` directory
+6. Create a `codegen.config.ts` file (see `sample-app/codegen.config.ts` for example)
+7. Run `./bin/codegen generate -c codegen.config.ts` to generate your code
+
+> **Note**: The `init` command is planned but not yet implemented.
 
 ## Adding New Templates
 
