@@ -45,7 +45,7 @@ This project is a GitHub-hosted framework for building CLI tools that generate c
 
 ### `src/`
 
-* **`src/index.ts`** – Optional library entry point if exposing an API
+* **`src/index.ts`** – *(Removed)* Library entry not needed for CLI-focused tool
 
 #### `src/cli/`
 
@@ -54,24 +54,28 @@ This project is a GitHub-hosted framework for building CLI tools that generate c
 #### `src/config/`
 
 * **`config.schema.ts`** – Zod schema to validate the config
-* **`loadConfig.ts`** – Dynamically loads and validates the config file
+* **`defaultConfig.ts`** – Default configuration values
+* **`templateContext.ts`** – TemplateContext generation for queue/job processing
+* **`templates/`** – Built-in template files
+  * **`common.ts.eta`** – Common types and utilities
+  * **`producers.ts.eta`** – Job producer functions  
+  * **`queues.ts.eta`** – Queue definitions
+  * **`workers.ts.eta`** – Worker implementations
 
 #### `src/core/`
 
-* **`parser.ts`** – Optional input parser for JSON, TypeScript, or other sources
-* **`transformer.ts`** – Optional transformation of parsed input to template context
-* **`generator.ts`** – Renders templates and writes output files
-* **`types.ts`** – Shared types for config, context, generation, etc.
+* **`loadConfig.ts`** – Dynamically loads and validates config files
+* **`generator.ts`** – Main generation engine that renders templates and writes output files
+* **`errors.ts`** – Custom error classes for better error handling
 
 #### `src/template-loader/`
 
-* **`TemplateLoader.ts`** – Utility to render Eta templates
-* **`templateContext.ts`** – TemplateContext generation for queue/job processing
+* **`TemplateLoader.ts`** – Eta template rendering utility with discovery and caching
 * **`types.ts`** – Template-related type definitions and exports
 
-#### `src/templates/`
+#### `src/utils/`
 
-* **`default/model.eta`** – Sample default Eta template to demonstrate usage
+* **`createLogger.ts`** – Logging utility for consistent output across the framework
 
 ### `tests/`
 
@@ -102,6 +106,25 @@ pnpm run bin/codegen
 chmod +x bin/codegen
 ./bin/codegen
 ```
+
+---
+
+## 🏗️ Architecture Decisions
+
+### Template Path Management
+- **Single Source of Truth**: Template paths defined only in `TemplateLoader.createTemplateLoader()`
+- **No Duplication**: Generator delegates template discovery to TemplateLoader
+- **User Override Support**: CLI can override template directories via `-t` flag
+
+### Simplified Generation Pipeline
+- **Direct Flow**: Config → Template Context → Template Rendering
+- **No Parser/Transformer**: Skipped complex abstraction layers for simplicity
+- **Eta Templates**: Lightweight template engine with minimal overhead
+
+### File Organization
+- **Built-in Templates**: Moved to `src/config/templates/` for logical grouping
+- **Configuration Co-location**: Config schema, defaults, and context creation in `src/config/`
+- **Modular Structure**: Clear separation between CLI, core logic, and template handling
 
 ---
 

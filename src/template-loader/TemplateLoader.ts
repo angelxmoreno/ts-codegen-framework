@@ -2,10 +2,16 @@ import { existsSync, readdirSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { TemplateLoadError, TemplateNotFoundError, TemplateRenderError, TemplateWriteError } from '@core/errors';
+import type {
+    RenderResult,
+    TemplateContext,
+    TemplateInfo,
+    TemplateLoaderConfig,
+    TemplateOptions,
+} from '@template-loader/types';
+import logger from '@utils/createLogger';
 import { Eta } from 'eta';
-import { TemplateLoadError, TemplateNotFoundError, TemplateRenderError, TemplateWriteError } from '../core/errors';
-import logger from '../utils/createLogger';
-import type { RenderResult, TemplateContext, TemplateInfo, TemplateLoaderConfig, TemplateOptions } from './types';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -28,7 +34,10 @@ export class TemplateLoader {
             autoEscape: false, // We want raw output for code generation
         });
 
-        logger.debug({ templateDirs: config.templateDirs }, 'TemplateLoader initialized');
+        logger.debug(
+            { templateDirs: config.templateDirs, rawConfig: JSON.stringify(config) },
+            'TemplateLoader initialized'
+        );
     }
 
     /**
@@ -179,8 +188,10 @@ export class TemplateLoader {
  * Create a TemplateLoader with default configuration
  */
 export function createTemplateLoader(overrides: Partial<TemplateLoaderConfig> = {}): TemplateLoader {
+    const builtinTemplatesPath = join(__dirname, '../config/templates');
+
     const defaultConfig: TemplateLoaderConfig = {
-        templateDirs: [join(process.cwd(), 'templates'), join(__dirname, '../templates')],
+        templateDirs: [join(process.cwd(), 'templates'), builtinTemplatesPath],
         extensions: ['.eta'],
         includeBuiltins: true,
     };

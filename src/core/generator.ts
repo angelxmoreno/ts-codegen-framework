@@ -1,13 +1,10 @@
 import { mkdir } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { type ConfigWithPath, loadConfig } from '@config/loadConfig';
+import { join } from 'node:path';
+import { createTemplateContextFromConfig, type TemplateContext } from '@config/templateContext';
+import { type ConfigWithPath, loadConfig } from '@core/loadConfig';
 import { createTemplateLoader } from '../template-loader/TemplateLoader';
-import { createTemplateContextFromConfig, type TemplateContext } from '../template-loader/templateContext';
 import logger from '../utils/createLogger';
 import { TemplateRenderError, TemplateWriteError } from './errors';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface GenerateOptions {
     configPath?: string;
@@ -89,16 +86,10 @@ export class CodeGenerator {
      * Initialize template loader
      */
     protected initializeTemplateLoader(): void {
-        const templateDirs = this.options.templateDirs || [
-            join(process.cwd(), 'templates'),
-            join(__dirname, '../templates'),
-        ];
+        // Only override templateDirs if explicitly provided by user
+        const overrides = this.options.templateDirs ? { templateDirs: this.options.templateDirs } : {};
 
-        this.templateLoader = createTemplateLoader({
-            templateDirs,
-            extensions: ['.eta'],
-            includeBuiltins: true,
-        });
+        this.templateLoader = createTemplateLoader(overrides);
     }
 
     /**

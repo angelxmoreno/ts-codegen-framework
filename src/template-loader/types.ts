@@ -1,5 +1,5 @@
 // Import and re-export the simplified TemplateContext
-import { createTemplateContextFromConfig, type TemplateContext } from './templateContext';
+import { createTemplateContextFromConfig, type TemplateContext } from '@config/templateContext';
 export { createTemplateContextFromConfig, type TemplateContext };
 /**
  * Template rendering options

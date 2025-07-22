@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
+import { generateCode } from '@core/generator';
+import logger from '@utils/createLogger';
 import { Command } from 'commander';
 // Use require for JSON imports since we're running through tsx
 import packageJson from '../../package.json';
-import { generateCode } from '../core/generator';
-import logger from '../utils/createLogger';
 
 const version = packageJson.version;
 

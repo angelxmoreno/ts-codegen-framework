@@ -1,6 +1,6 @@
 import { dirname, relative, resolve } from 'node:path';
-import type { ConfigWithPath } from '@config/loadConfig.ts';
-import type { Config, QueueConfig } from '../config/config.schema';
+import type { Config, QueueConfig } from '@config/config.schema';
+import type { ConfigWithPath } from '@core/loadConfig.ts';
 
 /**
  * Simplified template context derived from Config

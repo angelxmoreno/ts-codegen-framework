@@ -30,6 +30,7 @@
             "@cli/*": ["cli/*"],
             "@core/*": ["core/*"],
             "@config/*": ["config/*"],
+            "@utils/*": ["utils/*"],
             "@template-loader/*": ["template-loader/*"]
         }
     }

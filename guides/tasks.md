@@ -23,13 +23,21 @@
 - [X] Implement `src/template-loader/TemplateLoader.ts` class
     - [X] Initialize Eta engine with custom configuration
     - [X] Load templates from file system or user-defined paths
-    - [ ] Handle template caching
+    - [X] Handle template caching and discovery
     - [X] Handle template error handling
-- [X] Create `src/template-loader/templateContext.ts` with TemplateContext generation
+- [X] Create `src/config/templateContext.ts` with TemplateContext generation
     - [X] TemplateContext interface for queue/job processing
     - [X] Pre-computed naming functions (producer, processor, worker)
     - [X] createTemplateContextFromConfig function
-- [ ] Add sample template `src/templates/default/model.eta`
+- [X] Add built-in templates in `src/config/templates/`
+    - [X] common.ts.eta - Common types and utilities
+    - [X] producers.ts.eta - Job producer functions
+    - [X] queues.ts.eta - Queue definitions
+    - [X] workers.ts.eta - Worker implementations
+- [X] **RESOLVED**: Template path consolidation
+    - [X] Single source of truth for template paths in TemplateLoader
+    - [X] Removed duplicate path logic from generator
+    - [X] Fixed template discovery after file reorganization
 
 ### Phase 4: Generation Pipeline
 - [X] Build `src/core/generator.ts` main generation engine
@@ -37,13 +45,15 @@
     - [X] File system operations (read/write/create directories)
     - [X] Template context preparation using createTemplateContextFromConfig
     - [X] Error handling and validation
-- [ ] Implement `src/core/parser.ts` (optional but recommended)
-    - [ ] JSON input parsing
-    - [ ] TypeScript AST parsing (if needed)
-    - [ ] Generic input validation
-- [ ] Create `src/core/transformer.ts` (optional)
-    - [ ] Transform parsed input to template-ready context
-    - [ ] Data normalization and enrichment
+    - [X] Output path handling (config vs CLI override)
+    - [X] **ARCHITECTURAL DECISION**: Single source of truth for template paths
+- [X] Config loading system `src/core/loadConfig.ts`
+    - [X] Dynamic TypeScript config file loading
+    - [X] Zod validation integration
+    - [X] Path resolution and normalization
+- [X] **DECISION**: Skip parser/transformer pattern for simplicity
+    - Direct config → context → template rendering approach
+    - Simpler architecture, less abstraction layers
 
 ### Phase 5: CLI Interface
 - [X] Implement `src/cli/index.ts` with Commander.js
@@ -53,7 +63,9 @@
     - [X] Add template path option (`-t, --templates`)
     - [X] Include output directory option (`-o, --output`)
     - [X] Add verbose/debug flags
-- [ ] Create `src/index.ts` as library entry point (optional API export)
+    - [X] Executable binary setup in `bin/codegen`
+- [X] **DECISION**: No separate library entry point needed
+    - CLI-focused tool, direct imports from modules as needed
 
 ---
 
@@ -148,7 +160,15 @@
 
 ## 📋 Validation Checklist
 
+### Current Status: Phase 3 Complete ✅
+**Template System fully implemented and tested**
+
 ### Final Phase: Quality Assurance
+- [X] **Core Functionality Working**
+    - [X] Template path resolution fixed
+    - [X] Template discovery working correctly
+    - [X] Config loading and validation functional
+    - [X] CLI interface operational
 - [ ] **Functionality Testing**
     - [ ] CLI commands work correctly
     - [ ] Template rendering produces expected output
@@ -156,7 +176,7 @@
     - [ ] Error messages are helpful and clear
 - [ ] **Developer Experience**
     - [ ] Installation process is smooth
-    - [ ] Documentation is comprehensive and accurate
+    - [X] Documentation updated with template creation guide
     - [ ] Examples work out of the box
     - [ ] TypeScript types are exported properly
 - [ ] **Performance & Reliability**

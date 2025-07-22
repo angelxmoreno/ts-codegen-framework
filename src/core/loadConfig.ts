@@ -3,8 +3,8 @@ import { pathToFileURL } from 'node:url';
 import { type Config, ConfigSchema } from '@config/config.schema';
 import { defaultConfig } from '@config/defaultConfig';
 import { ConfigLoadError, ConfigValidationError } from '@core/errors';
+import logger from '@utils/createLogger';
 import { z } from 'zod';
-import logger from '../utils/createLogger';
 
 export interface ConfigWithPath extends Config {
     configPath: string;
