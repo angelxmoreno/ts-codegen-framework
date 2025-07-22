@@ -1,9 +1,9 @@
-import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { type Config, ConfigSchema } from '@config/config.schema';
 import { defaultConfig } from '@config/defaultConfig';
-import { ConfigLoadError, ConfigValidationError } from '@core/errors';
+import { ConfigLoadError, ConfigValidationError, PathValidationError } from '@core/errors';
 import logger from '@utils/createLogger';
+import { safeResolve } from '@utils/pathValidation';
 import { z } from 'zod';
 
 export interface ConfigWithPath extends Config {
@@ -30,8 +30,18 @@ export const validateConfig = (maybeConfig: unknown, configPath?: string): Confi
  * @returns Promise resolving to validated config
  */
 export const loadConfig = async (configPath = './codegen.config.ts'): Promise<ConfigWithPath> => {
-    // Resolve the absolute path
-    const absolutePath = resolve(configPath);
+    // Safely resolve the absolute path and validate it's within project directory
+    let absolutePath: string;
+    try {
+        absolutePath = safeResolve(configPath);
+        logger.debug({ configPath, resolvedPath: absolutePath }, 'Config path validated and resolved');
+    } catch (error) {
+        if (error instanceof PathValidationError) {
+            logger.error({ configPath, error: error.message }, 'Config path validation failed');
+            throw new ConfigLoadError(configPath, error);
+        }
+        throw error;
+    }
 
     try {
         // Convert to file URL for dynamic import

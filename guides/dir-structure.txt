@@ -4,21 +4,24 @@ ts-codegen-framework/
 ├── src/
 │   ├── cli/                    # Commander CLI logic
 │   │   └── index.ts
-│   ├── config/                 # Zod config schema + loader
+│   ├── config/                 # Zod config schema + defaults + templates
 │   │   ├── config.schema.ts
-│   │   └── loadConfig.ts
-│   ├── core/                   # Codegen pipeline (parse → transform → generate)
-│   │   ├── parser.ts
-│   │   ├── transformer.ts
-│   │   ├── generator.ts
-│   │   └── types.ts
-│   ├── template-loader/        # Eta template rendering & helpers
+│   │   ├── defaultConfig.ts
+│   │   ├── templateContext.ts
+│   │   └── templates/          # Built-in template files
+│   │       ├── common.ts.eta
+│   │       ├── producers.ts.eta
+│   │       ├── queues.ts.eta
+│   │       └── workers.ts.eta
+│   ├── core/                   # Core generation pipeline
+│   │   ├── errors.ts
+│   │   ├── loadConfig.ts
+│   │   └── generator.ts
+│   ├── template-loader/        # Eta template rendering system
 │   │   ├── TemplateLoader.ts
-│   │   └── helpers.ts
-│   ├── templates/              # Built-in default templates
-│   │   └── default/
-│   │       └── model.eta
-│   └── index.ts                # Optional API entry
+│   │   └── types.ts
+│   ├── utils/                  # Shared utilities
+│   │   └── createLogger.ts
 ├── tests/
 │   ├── core/
 │   └── template-loader/

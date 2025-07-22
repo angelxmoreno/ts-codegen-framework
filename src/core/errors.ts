@@ -145,6 +145,17 @@ export class ParseError extends CodegenError {
 }
 
 /**
+ * Error thrown when path validation fails
+ */
+export class PathValidationError extends CodegenError {
+    readonly code = 'PATH_VALIDATION_ERROR';
+
+    constructor(path: string, reason: string, cause?: Error) {
+        super(`Path validation failed for "${path}": ${reason}`, cause);
+    }
+}
+
+/**
  * Type guard to check if error is a codegen framework error
  */
 export function isCodegenError(error: unknown): error is CodegenError {
@@ -156,4 +167,11 @@ export function isCodegenError(error: unknown): error is CodegenError {
  */
 export function isConfigValidationError(error: unknown): error is ConfigValidationError {
     return error instanceof ConfigValidationError;
+}
+
+/**
+ * Type guard to check if error is a path validation error
+ */
+export function isPathValidationError(error: unknown): error is PathValidationError {
+    return error instanceof PathValidationError;
 }
