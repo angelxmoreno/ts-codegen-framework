@@ -1,6 +1,13 @@
 import type { Config } from '@config/config.schema.ts';
 import { RepoIdentifierSchema, RepoPageSchema } from './schemas';
 
+/**
+ * Sample codegen configuration
+ *
+ * Note: processorPath values are resolved relative to this config file's directory.
+ * The framework automatically resolves './processors/file.ts' to the correct absolute path
+ * and then calculates the appropriate relative path for use in generated templates.
+ */
 const config: Config = {
     queues: [
         {
@@ -54,7 +61,7 @@ const config: Config = {
     ],
     outputPath: './.bullgenq',
     connectionFactory: () => ({
-        host: '192.168.1.132',
+        host: process.env.REDIS_HOST || 'your-redis-host',
     }),
 };
 
