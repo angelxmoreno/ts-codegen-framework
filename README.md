@@ -23,24 +23,35 @@ bun install
 
 Use this framework as a starting point for your own codegen tool:
 
-#### Option A: GitHub Template (Recommended)
+#### Option A: GitHub Template + Interactive Setup (⭐ Recommended)
 1. Click "Use this template" → "Create a new repository"
 2. Clone your new repository
-3. Customize the code for your specific use case
+3. **Run the setup script**: `./init.sh`
+   - Automatically updates package.json with your info
+   - Sets up publishing (npm/GitHub Packages/skip)
+   - Cleans up framework-specific files
+   - Optionally initializes fresh git repo
+   - Installs dependencies and runs tests
 
-#### Option B: Fork and Customize
 ```bash
-git clone https://github.com/your-username/ts-codegen-framework.git my-custom-codegen
-cd my-custom-codegen
-bun install
+git clone https://github.com/your-username/your-new-tool.git
+cd your-new-tool
+./init.sh  # 🎯 Interactive setup - sets up everything!
 ```
 
-#### Option C: Manual Clone
+#### Option B: Manual Clone + Interactive Setup
 ```bash
 git clone https://github.com/angelxmoreno/ts-codegen-framework.git my-custom-codegen
 cd my-custom-codegen
-rm -rf .git
-git init
+./init.sh  # 🎯 Interactive setup - handles git init too!
+```
+
+#### Option C: Manual Setup (Advanced)
+```bash
+git clone https://github.com/angelxmoreno/ts-codegen-framework.git my-custom-codegen
+cd my-custom-codegen
+# Manually update package.json, setup publishing, etc.
+rm -rf .git && git init
 bun install
 ```
 
@@ -48,17 +59,42 @@ bun install
 
 After creating your custom codegen tool, you can optionally publish it:
 
-#### To npm (Most Common)
-1. Copy `.npmrc.template` to `.npmrc`
-2. Copy `.github/workflows/publish-to-npm.yml.template` to `.github/workflows/publish-to-npm.yml`
-3. Update `package.json` with your tool's name, author, etc.
-4. Add `NPM_TOKEN` secret to your repository
-5. Create a release to auto-publish
+> **💡 Tip:** If you used `./init.sh`, publishing is already configured based on your choice!
 
-#### To GitHub Packages
-1. Update `package.json` name to `@your-username/your-tool-name`
-2. Add `publishConfig.registry` for GitHub Packages
-3. Create a release to auto-publish
+#### To npm (Most Common)
+- **If you used init.sh**: Just add `NPM_TOKEN` secret and create a release
+- **Manual setup**: 
+  1. Copy `.npmrc.template` to `.npmrc` (choose npm option)
+  2. Copy `.github/workflows/publish-to-npm.yml.template` to `.github/workflows/publish-to-npm.yml`
+  3. Update `package.json` with your tool's details
+  4. Add `NPM_TOKEN` secret to your repository
+  5. Create a release to auto-publish
+
+#### To GitHub Packages  
+- **If you used init.sh**: Publishing is already configured, just create a release
+- **Manual setup**:
+  1. Update `package.json` name to `@your-username/your-tool-name`
+  2. Configure `.npmrc` for GitHub Packages
+  3. Create a release to auto-publish
+
+## 🎯 Interactive Setup Script (`init.sh`)
+
+The `init.sh` script provides a guided setup experience for creating your custom codegen tool:
+
+### ✨ What it does:
+- **📝 Collects your info**: Tool name, author, email, GitHub username, description
+- **📦 Updates package.json**: Automatically replaces framework placeholders with your details
+- **🚀 Configures publishing**: Choose between npm, GitHub Packages, or skip
+- **🧹 Cleans up**: Removes framework-specific files and templates
+- **📋 Git setup**: Optionally initializes fresh repository with proper commit
+- **🔧 Dependencies**: Installs packages and runs tests to verify setup
+
+### 🚦 Usage:
+```bash
+./init.sh
+```
+
+The script is interactive and will guide you through each step. It's cross-platform compatible (macOS/Linux) and includes error handling and validation.
 
 ## CLI Commands
 
