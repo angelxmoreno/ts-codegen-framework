@@ -1,0 +1,12 @@
+# Template .npmrc for publishing your custom codegen tool
+#
+# Instructions for users:
+# 1. Copy this file to .npmrc (remove .template)
+# 2. Choose ONE of the options below based on where you want to publish
+# 3. Update YOUR_USERNAME with your actual GitHub username if using GitHub Packages
+
+# Option 1: Publish to npm registry (most common)
+registry=https://registry.npmjs.org/
+
+# Option 2: Publish to GitHub Packages (uncomment and update YOUR_USERNAME)
+# @YOUR_USERNAME:registry=https://npm.pkg.github.com

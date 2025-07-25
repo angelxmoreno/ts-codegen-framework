@@ -1,13 +1,53 @@
 {
-    "name": "ts-codegen-framework",
+    "name": "@angelxmoreno/ts-codegen-framework",
     "module": "src/index.ts",
     "type": "module",
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "description": "A TypeScript framework for zero-build CLI codegen with templates and config",
+    "author": "Angel Moreno <angelxmoreno@gmail.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/angelxmoreno/ts-codegen-framework.git"
+    },
+    "bugs": {
+        "url": "https://github.com/angelxmoreno/ts-codegen-framework/issues"
+    },
+    "homepage": "https://github.com/angelxmoreno/ts-codegen-framework#readme",
+    "keywords": [
+        "typescript",
+        "codegen",
+        "cli",
+        "templates",
+        "framework",
+        "code-generation"
+    ],
+    "bin": {
+        "codegen": "./bin/codegen"
+    },
+    "files": [
+        "bin/",
+        "src/",
+        "README.md",
+        "CLAUDE.md",
+        "init.sh",
+        "tsconfig.json",
+        ".npmrc.template",
+        ".github/workflows/publish-to-npm.yml.template"
+    ],
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
     "scripts": {
         "clean": "rm -rf node_modules bun.lock && bun install",
         "lint": "biome check .",
         "lint:fix": "biome check --write",
-        "check-types": "tsc --noEmit"
+        "check-types": "tsc --noEmit",
+        "test": "bun test",
+        "prepublishOnly": "bun run lint && bun run check-types && bun run test"
     },
     "dependencies": {
         "@types/inflection": "^2.0.0",
